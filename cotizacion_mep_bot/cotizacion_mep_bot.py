@@ -13,7 +13,7 @@ class CotizacionMepBot():
         self.start_handler = CommandHandler('start', self.start)
         self.mep_value_handler = CommandHandler('mep', self.mep)
         self._dispatcher.add_handler(self.start_handler)
-        self._dispatcher.add_handler(self.voucher_handler)
+        self._dispatcher.add_handler(self.mep_value_handler)
         self._dispatcher.add_error_handler(self.error_handler)
 
     def start(self, bot, update):
@@ -34,13 +34,13 @@ Ingrese /mep para obtener la cotizacoin del dia''')
             raise StandardError("No se ha podido recuperar el valor del dolar MEP en este momento, por favor intente mas tarde.")
         response = response.json()
         bot.send_message(chat_id=update.message.chat_id,text=
-        '''
+        u'''
 Valor MEP: {0}
 Bono ARS: {1}
 Valor Bono: {2}
 Bono USD: {3}
 Valor Bono: {4}
-Última act: {5}
+Ultima act: {5}
         '''.format(response["mep_value"], 
         response["bond_ars"]["code"], 
         response["bond_ars"]["price"], 

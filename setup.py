@@ -1,7 +1,7 @@
 """This is the installation toolset for this project."""
 from setuptools import setup, find_packages
 
-with open('README.rst', 'r') as fh:
+with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setup(name='cotizacion_mep_bot',
@@ -9,7 +9,7 @@ setup(name='cotizacion_mep_bot',
       author='dantebarba',
       description='Bot para las cotizaciones del dolar MEP',
       long_description=long_description,
-      install_requires=["python-telegram-bot", "requests"],
+      install_requires=["python-telegram-bot==11.1.0", "requests"],
       packages=find_packages(exclude=('tests',)),
       entry_points={
           'console_scripts': [
