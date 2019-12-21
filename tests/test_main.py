@@ -8,8 +8,7 @@ class MainTestSuite(unittest.TestCase):
     """Basic test cases."""
 
     def test_main(self):
-        with self.assertRaises(NotImplementedError):
-            main()
+        main()
 
 
 if __name__ == '__main__':
