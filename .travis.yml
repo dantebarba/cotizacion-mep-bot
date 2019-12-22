@@ -1,0 +1,7 @@
+services:
+  - docker
+  
+script:
+- docker build -t dantebarba/cotizacion-mep-bot:latest .
+- docker login --username=$DOCKER_USER --password=$DOCKER_PASSWORD
+- docker push dantebarba/cotizacion-mep-bot:latest
