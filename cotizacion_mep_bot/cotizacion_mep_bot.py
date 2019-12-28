@@ -23,7 +23,7 @@ class CotizacionMepBot():
     def start(self, bot, update):
         ''' Mensaje inicial del bot '''
         bot.send_message(chat_id=update.message.chat_id, text='''Bienvenido a Cotizacion_MEP, el bot que recupera el precio del dolar MEP. 
-Ingrese /mep para obtener la cotizacoin del dia''')
+Ingrese /mep para obtener la cotizacoin del dia. Ingrese /mep_all para visualizar todas las cotizaciones ordenadas''')
 
     def mep(self, bot, update):
         ''' devuelve el mep 
