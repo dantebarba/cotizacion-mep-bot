@@ -1,6 +1,16 @@
 version: '2'
 
 services:
+  mongodb:
+    image: library/mongo
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_DATABASE: mep_bonds
+    ports:
+      - "27017:27017"
+    volumes:
+      - db:/data/db
+
   cotizacion-mep-bot:
     image: dantebarba/cotizacion-mep-bot:latest
     container_name: cotizacion-mep-bot
@@ -9,10 +19,13 @@ services:
       API_URL: $api_url
 
   cotizacion-mep-api:
-    image: dantebarba/cotizacion-mep:latest
+    build: ../cotizacion-mep
     container_name: cotizacion-mep-api
     environment:
       username: ${username}
       password: ${password}
     ports:
       - "5000:5000/tcp"
+
+volumes:
+  db:
