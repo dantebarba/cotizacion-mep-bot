@@ -9,4 +9,4 @@ ENV API_KEY=''
 ENV API_URL=''
 ENV TELEGRAM_TOKEN=''
 
-CMD ["sh", "-c", "python -m cotizacion_mep_bot --telegram_token $TELEGRAM_TOKEN --api_url $API_URL"]
+CMD ["sh", "-c", "python -u -m cotizacion_mep_bot --telegram_token $TELEGRAM_TOKEN --api_url $API_URL"]

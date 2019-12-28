@@ -12,7 +12,7 @@ services:
       - db:/data/db
 
   cotizacion-mep-bot:
-    image: dantebarba/cotizacion-mep-bot:latest
+    build: ./
     container_name: cotizacion-mep-bot
     environment:
       TELEGRAM_TOKEN: $telegram_token
