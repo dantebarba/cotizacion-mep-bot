@@ -1,5 +1,6 @@
 import requests
 import urllib2
+import json
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 
@@ -46,8 +47,8 @@ Ingrese /mep para obtener la cotizacoin del dia''')
             self._process_response(response.json(), bot, update)
 
     def _process_response(self, response, bot, update):
-        print response
         for element in response:
+            json_element = json.loads(element)
             bot.send_message(chat_id=update.message.chat_id, text=u'''
 Valor MEP: {0}
 Bono ARS: {1}
@@ -55,12 +56,12 @@ Valor Bono: {2}
 Bono USD: {3}
 Valor Bono: {4}
 Ultima act: {5}
-        '''.format(element["mep_value"],
-                   element["bond_ars"]["code"],
-                   element["bond_ars"]["price"],
-                   element["bond_usd"]["code"],
-                   element["bond_usd"]["price"],
-                   element["last_update"]))
+        '''.format(json_element["mep_value"],
+                   json_element["bond_ars"]["code"],
+                   json_element["bond_ars"]["price"],
+                   json_element["bond_usd"]["code"],
+                   json_element["bond_usd"]["price"],
+                   json_element["last_update"]))
 
     def start_pooling(self):
         self._updater.start_polling()
