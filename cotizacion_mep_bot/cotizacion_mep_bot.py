@@ -46,7 +46,6 @@ Ingrese /mep para obtener la cotizacoin del dia''')
             self._process_response(response.json(), bot, update)
 
     def _process_response(self, response, bot, update):
-        print response
         for element in response:
             bot.send_message(chat_id=update.message.chat_id, text=u'''
 Valor MEP: {0}
