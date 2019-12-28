@@ -34,16 +34,16 @@ Ingrese /mep para obtener la cotizacoin del dia''')
         '''
         response = requests.get(self.api_url(), 0, 1)
         if (response.status_code is not 200):
-            raise StandardError(
-                "No se ha podido recuperar el valor del dolar MEP en este momento, por favor intente mas tarde.")
-        self._process_response(response.json(), bot)
+            self.error_handler(bot, None)
+        else:
+            self._process_response(response.json(), bot)
     
     def mep_all(self, bot, update):
         response = requests.get(self.api_url())
         if (response.status_code is not 200):
-            raise StandardError(
-                "No se ha podido recuperar el valor del dolar MEP en este momento, por favor intente mas tarde.")
-        self._process_response(response.json(), bot)
+            self.error_handler(bot, None)
+        else:
+            self._process_response(response.json(), bot)
 
     def _process_response(self, response, bot):
         for element in response:
