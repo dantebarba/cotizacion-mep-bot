@@ -3,6 +3,7 @@ import urllib2
 from telegram.ext import Updater
 from telegram.ext import CommandHandler
 
+
 class CotizacionMepBot():
     ''' Esta clase contiene todo lo necesario para operar el bot '''
 
@@ -12,15 +13,17 @@ class CotizacionMepBot():
         self._dispatcher = self._updater.dispatcher
         self.start_handler = CommandHandler('start', self.start)
         self.mep_value_handler = CommandHandler('mep', self.mep)
+        self.mep_all_handler = CommandHandler('mep_all', self.mep_all)
         self._dispatcher.add_handler(self.start_handler)
         self._dispatcher.add_handler(self.mep_value_handler)
+        self._dispatcher.add_handler(self.mep_all_handler)
         self._dispatcher.add_error_handler(self.error_handler)
 
     def start(self, bot, update):
         ''' Mensaje inicial del bot '''
-        bot.send_message(chat_id=update.message.chat_id,text='''Bienvenido a Cotizacion_MEP, el bot que recupera el precio del dolar MEP. 
+        bot.send_message(chat_id=update.message.chat_id, text='''Bienvenido a Cotizacion_MEP, el bot que recupera el precio del dolar MEP. 
 Ingrese /mep para obtener la cotizacoin del dia''')
-    
+
     def mep(self, bot, update):
         ''' devuelve el mep 
         Ejemplo: {"bond_ars": 
@@ -29,24 +32,34 @@ Ingrese /mep para obtener la cotizacoin del dia''')
         {"currency": "USD", "price": 40.51, "code": "AY24D", "last_update": "2019-12-20T17:00:40.9959802-03:00"}, 
         "last_update": "2019-12-21T19:00:09.651982"}
         '''
+        response = requests.get(self.api_url(), 0, 1)
+        if (response.status_code is not 200):
+            raise StandardError(
+                "No se ha podido recuperar el valor del dolar MEP en este momento, por favor intente mas tarde.")
+        self._process_response(response.json(), bot)
+    
+    def mep_all(self, bot, update):
         response = requests.get(self.api_url())
         if (response.status_code is not 200):
-            raise StandardError("No se ha podido recuperar el valor del dolar MEP en este momento, por favor intente mas tarde.")
-        response = response.json()
-        bot.send_message(chat_id=update.message.chat_id,text=
-        u'''
+            raise StandardError(
+                "No se ha podido recuperar el valor del dolar MEP en este momento, por favor intente mas tarde.")
+        self._process_response(response.json(), bot)
+
+    def _process_response(self, response, bot):
+        for element in response:
+            bot.send_message(chat_id=update.message.chat_id, text=u'''
 Valor MEP: {0}
 Bono ARS: {1}
 Valor Bono: {2}
 Bono USD: {3}
 Valor Bono: {4}
 Ultima act: {5}
-        '''.format(response["mep_value"], 
-        response["bond_ars"]["code"], 
-        response["bond_ars"]["price"], 
-        response["bond_usd"]["code"], 
-        response["bond_usd"]["price"], 
-        response["last_update"]))
+        '''.format(element["mep_value"],
+                   element["bond_ars"]["code"],
+                   element["bond_ars"]["price"],
+                   element["bond_usd"]["code"],
+                   element["bond_usd"]["price"],
+                   element["last_update"]))
 
     def start_pooling(self):
         self._updater.start_polling()
@@ -55,5 +68,5 @@ Ultima act: {5}
     def error_handler(self, bot, error):
         bot.send_message(text='Ha ocurrido un error inesperado.')
 
-    def api_url(self):
-        return self._url + "/api/v1/mepvalue"
+    def api_url(self, start=0, end=100):
+        return self._url + "/api/v1/mepvalue?from="+start+"&to="+end
