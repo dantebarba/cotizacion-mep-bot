@@ -32,7 +32,7 @@ Ingrese /mep para obtener la cotizacoin del dia''')
         {"currency": "USD", "price": 40.51, "code": "AY24D", "last_update": "2019-12-20T17:00:40.9959802-03:00"}, 
         "last_update": "2019-12-21T19:00:09.651982"}
         '''
-        response = requests.get(self.api_url(), 0, 1)
+        response = requests.get(self.api_url(), "0", "1")
         if (response.status_code is not 200):
             self.error_handler(bot, None)
         else:
@@ -69,5 +69,5 @@ Ultima act: {5}
     def error_handler(bot, update, error):
         bot.send_message(chat_id=update.message.chat_id, text='Ha ocurrido un error inesperado.')
 
-    def api_url(self, start=0, end=100):
+    def api_url(self, start="0", end="100"):
         return self._url + "/api/v1/mepvalue?from="+start+"&to="+end
