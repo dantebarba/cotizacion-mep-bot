@@ -17,7 +17,7 @@ class CotizacionMepBot():
         self._dispatcher.add_handler(self.start_handler)
         self._dispatcher.add_handler(self.mep_value_handler)
         self._dispatcher.add_handler(self.mep_all_handler)
-        self._dispatcher.add_error_handler(CotizacionMepBot.error_handler)
+        self._dispatcher.add_error_handler(self.error_handler)
 
     def start(self, bot, update):
         ''' Mensaje inicial del bot '''
@@ -32,20 +32,21 @@ Ingrese /mep para obtener la cotizacoin del dia''')
         {"currency": "USD", "price": 40.51, "code": "AY24D", "last_update": "2019-12-20T17:00:40.9959802-03:00"}, 
         "last_update": "2019-12-21T19:00:09.651982"}
         '''
-        response = requests.get(self.api_url(), "0", "1")
+        response = requests.get(self.api_url("0", "1"))
         if (response.status_code is not 200):
-            self.error_handler(bot, None)
+            self.error_handler(bot, update, None)
         else:
             self._process_response(response.json(), bot, update)
     
     def mep_all(self, bot, update):
         response = requests.get(self.api_url())
         if (response.status_code is not 200):
-            self.error_handler(bot, None)
+            self.error_handler(bot, update, None)
         else:
             self._process_response(response.json(), bot, update)
 
     def _process_response(self, response, bot, update):
+        print response
         for element in response:
             bot.send_message(chat_id=update.message.chat_id, text=u'''
 Valor MEP: {0}
@@ -65,8 +66,7 @@ Ultima act: {5}
         self._updater.start_polling()
         self._updater.idle()
 
-    @staticmethod
-    def error_handler(bot, update, error):
+    def error_handler(self, bot, update, error):
         bot.send_message(chat_id=update.message.chat_id, text='Ha ocurrido un error inesperado.')
 
     def api_url(self, start="0", end="100"):
