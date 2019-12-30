@@ -38,7 +38,7 @@ Ingrese /mep para obtener la cotizacoin del dia. Ingrese /mep_all para visualiza
             self.error_handler(bot, update, None)
         else:
             self._process_response(response.json(), bot, update)
-    
+
     def mep_all(self, bot, update):
         response = requests.get(self.api_url())
         if (response.status_code is not 200):
@@ -47,20 +47,23 @@ Ingrese /mep para obtener la cotizacoin del dia. Ingrese /mep_all para visualiza
             self._process_response(response.json(), bot, update)
 
     def _process_response(self, response, bot, update):
-        for element in response:
-            json_element = json.loads(element)
+        for json_element in response:
             bot.send_message(chat_id=update.message.chat_id, text=u'''
 Valor MEP: {0}
 Bono ARS: {1}
 Valor Bono: {2}
-Bono USD: {3}
-Valor Bono: {4}
-Ultima act: {5}
+Monto operado: {3}
+Bono USD: {4}
+Valor Bono: {5}
+Monto operado: {6}
+Ultima act: {7}
         '''.format(json_element["mep_value"],
                    json_element["bond_ars"]["code"],
                    json_element["bond_ars"]["price"],
+                   json_element["bond_ars"]["volume"],
                    json_element["bond_usd"]["code"],
                    json_element["bond_usd"]["price"],
+                   json_element["bond_usd"]["volume"],
                    json_element["last_update"]))
 
     def start_pooling(self):
@@ -68,7 +71,8 @@ Ultima act: {5}
         self._updater.idle()
 
     def error_handler(self, bot, update, error):
-        bot.send_message(chat_id=update.message.chat_id, text='Ha ocurrido un error inesperado.')
+        bot.send_message(chat_id=update.message.chat_id,
+                         text='Ha ocurrido un error inesperado.')
 
     def api_url(self, start="0", end="100"):
         return self._url + "/api/v1/mepvalue?from="+start+"&to="+end

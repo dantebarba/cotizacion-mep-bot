@@ -7,7 +7,7 @@ import logging
 def main():
     """The actual entry point."""
     logging.basicConfig(
-        level=logging.DEBUG,
+        level=logging.WARNING,
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
     parser = argparse.ArgumentParser(description='Ejecucion del bot servicio')
