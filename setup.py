@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setup(name='cotizacion_mep_bot',
-      version='0.4.0',
+      version='0.5.0',
       author='dantebarba',
       description='Bot para las cotizaciones del dolar MEP',
       long_description=long_description,
